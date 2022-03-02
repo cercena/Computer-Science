@@ -1,0 +1,5 @@
+Por algum motivo o projeto não estava rodando com .jre que a professora forneceu, alegando que o driver poderia
+estar desatualizado e não aceita arquivos de tal tipo [ You need JDK >= 8 and pgjdbc >= 42.2.0 (not ".jre" vesions) ].
+
+Para contornar essa situação, baixei um novo JBDC direto do site do PostgreSQL, e então o problema foi resolvido. Esse
+driver se encontra nessa pasta e basta adicionar seu caminho na library do projeto via NetBeans.
