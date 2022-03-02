@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+  then
+    MAP_NAME=mapa.in
+  else
+    MAP_NAME=$1
+fi
+
+HOSTS_STR=$(grep Maquinas ambiente.in | cut -d ":" -f 2)
+
+IFS=' ' read -ra HOSTS <<< "$HOSTS_STR"
+for i in "${HOSTS[@]}"; do
+  echo "$i" > /dev/null
+done
+
+# Compile the project
+ssh "${HOSTS[0]}" "make -s -C machado_igor/cooking" > /dev/null
+
+# Run the chef spawners in the hosts
+./mussh -m -h "${HOSTS[*]}" -c "make chef-spawner -s -C machado_igor/cooking" > /dev/null &
+
+sleep 10
+
+# Runs the kitchen manager
+ssh "${HOSTS[0]}" "make -s kitchen MAP_NAME=${MAP_NAME} HOSTS='${HOSTS[*]}' -C machado_igor/cooking"
